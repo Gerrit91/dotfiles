@@ -110,8 +110,23 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+function prompt_metalctl() {
+  local ctx=$(metalctl context short)
+  local u=$(metalctl context |grep "*"|cut -d" " -f5)
+  p10k segment -f blue -t "${ctx} (${u// /})"
+}
+
+function prompt_cloudctl() {
+  local ctx=$(cloudctl context short)
+  local u=$(cloudctl context |grep "*"|cut -f2)
+  p10k segment -f blue -t "${ctx} (${u// /})"
+}
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+typeset -g POWERLEVEL9K_METALCTL_SHOW_ON_COMMAND='metalctl|m'
+typeset -g POWERLEVEL9K_CLOUDCTL_SHOW_ON_COMMAND='cloudctl|c'
 
 autoload -U compinit; compinit
 
@@ -175,4 +190,3 @@ export GOOGLE_CLOUD_SDK_HOME=$CLOUDSDK_ROOT_D
 
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 export EDITOR=vim
-
