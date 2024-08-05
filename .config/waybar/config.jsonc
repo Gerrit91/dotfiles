@@ -1,0 +1,134 @@
+// -*- mode: jsonc -*-
+{
+    "layer": "top",
+    // "output": "!eDP-1",
+    "margin-bottom": 0,
+	"margin-top": 0,
+    "spacing": 0,
+    "modules-left": [
+        "custom/launcher",
+        "hyprland/window"
+    //     // "custom/media"
+    //     // "tray"
+    ],
+    "modules-center": [
+        "hyprland/workspaces"
+    ],
+    "modules-right": [
+        // "mpd",
+        // "idle_inhibitor",
+        "custom/updates",
+        "network",
+        "pulseaudio",
+        // "power-profiles-daemon",
+        // "cpu",
+        // "memory",
+        // "temperature",
+        // "backlight",
+        // "keyboard-state",
+        // "hyprland/language",
+        "battery",
+        "clock"
+        // "custom/power"
+    ],
+    // Hyprland Workspaces
+    "hyprland/workspaces": {
+        "on-scroll-up": "hyprctl dispatch workspace r-1",
+        "on-scroll-down": "hyprctl dispatch workspace r+1",
+        "on-click": "activate",
+        "active-only": false,
+        "all-outputs": true,
+        "format": "{}",
+        "format-icons": {
+          "urgent": "",
+          "active": "",
+          "default": ""
+        }
+        // "persistent-workspaces": {
+        //   "*": 5
+        // }
+    },
+      // Hyprland Window
+    "hyprland/window": {
+        "rewrite": {
+            "(.*) — Mozilla Firefox": "   $1",
+            "(.*) - Code - OSS": "󰨞   $1",
+            // "foot": "",
+            // "code": "",
+        // "(.*) - Brave": "$1",
+        // "(.*) - Chromium": "$1",
+        // "(.*) - Brave Search": "$1",
+        // "(.*) - Outlook": "$1",
+        // "(.*) Microsoft Teams": "$1"
+        },
+        "separate-outputs": false
+    },
+    // Battery
+    "battery": {
+        "states": {
+        // "good": 95,
+        "warning": 30,
+        "critical": 15
+        },
+        "format": "{icon}  {capacity}%",
+        "format-charging": "  {capacity}%",
+        "format-plugged": "  {capacity}%",
+        "format-alt": "{icon}  {time}",
+        // "format-good": "", // An empty format will hide the module
+        // "format-full": "",
+        "format-icons": [" ", " ", " ", " ", " "]
+    },
+    // Clock
+    "clock": {
+        "format": "{:%a, %d %b %H:%M:%S}",
+        "interval": 1,
+        "locale": "de_DE.UTF-8"
+    },
+    // Sound
+    "pulseaudio": {
+        // "scroll-step": 1, // %, can be a float
+        "format": "{icon}  {volume}%",
+        "format-bluetooth": "{volume}% {icon}  {format_source}",
+        "format-bluetooth-muted": "  {icon}  {format_source}",
+        "format-muted": "  {format_source}",
+        "format-source": "{volume}%  ",
+        "format-source-muted": "",
+        "format-icons": {
+          "headphone": " ",
+          "hands-free": " ",
+          "headset": " ",
+          "phone": " ",
+          "portable": " ",
+          "car": " ",
+          "default": ["", "", ""]
+        },
+        "on-click": "pavucontrol"
+    },
+    // Network
+    "network": {
+        "format": "{ifname}  ⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}",
+        "format-wifi": "   {signalStrength}%   ⇣{bandwidthDownBytes}   ⇡{bandwidthUpBytes}",
+        "format-ethernet": "  {ifname}  ⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}",
+        "format-disconnected": "Disconnected",
+        "tooltip-format": "   {ifname} via {gwaddri}",
+        "tooltip-format-wifi": "   {ifname} @ {essid}\nIP: {ipaddr}\nStrength: {signalStrength}%\nFreq: {frequency}MHz\nUp: {bandwidthUpBits} Down: {bandwidthDownBits}",
+        "tooltip-format-ethernet": "   {ifname}\nIP: {ipaddr}\n up: {bandwidthUpBits} down: {bandwidthDownBits}",
+        "tooltip-format-disconnected": "Disconnected",
+        "max-length": 50
+    },
+    // Updates Count
+    "custom/updates": {
+        "format": "   {}",
+        "escape": true,
+        "return-type": "json",
+        "exec": "~/.config/waybar/custom/updates.sh",
+        "restart-interval": 300
+    },
+    // Launcher
+    "custom/launcher": {
+        "format": "",
+        "tooltip-format": "Launcher",
+        "escape": true,
+        "on-click": "walker --modules applications"
+    }
+}
