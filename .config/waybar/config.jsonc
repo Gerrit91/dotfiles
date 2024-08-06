@@ -8,27 +8,18 @@
     "modules-left": [
         "custom/launcher",
         "hyprland/window"
-    //     // "custom/media"
-    //     // "tray"
     ],
     "modules-center": [
         "hyprland/workspaces"
     ],
     "modules-right": [
-        // "mpd",
-        // "idle_inhibitor",
         "custom/updates",
         "network",
         "pulseaudio",
-        // "power-profiles-daemon",
-        // "cpu",
-        // "memory",
-        // "temperature",
-        // "backlight",
-        // "keyboard-state",
-        // "hyprland/language",
         "battery",
-        "clock"
+        "custom/weather",
+        "clock",
+        "custom/notification"
         // "custom/power"
     ],
     // Hyprland Workspaces
@@ -36,8 +27,9 @@
         "on-scroll-up": "hyprctl dispatch workspace r-1",
         "on-scroll-down": "hyprctl dispatch workspace r+1",
         "on-click": "activate",
+        "sort-by-number": true,
         "active-only": false,
-        "all-outputs": true,
+        "all-outputs": false,
         "format": "{}",
         "format-icons": {
           "urgent": "",
@@ -52,16 +44,9 @@
     "hyprland/window": {
         "rewrite": {
             "(.*) — Mozilla Firefox": "   $1",
-            "(.*) - Code - OSS": "󰨞   $1",
-            // "foot": "",
-            // "code": "",
-        // "(.*) - Brave": "$1",
-        // "(.*) - Chromium": "$1",
-        // "(.*) - Brave Search": "$1",
-        // "(.*) - Outlook": "$1",
-        // "(.*) Microsoft Teams": "$1"
+            "(.*) - Code - OSS": "󰨞   $1"
         },
-        "separate-outputs": false
+        "separate-outputs": true
     },
     // Battery
     "battery": {
@@ -82,7 +67,26 @@
     "clock": {
         "format": "{:%a, %d %b %H:%M:%S}",
         "interval": 1,
-        "locale": "de_DE.UTF-8"
+        "locale": "de_DE.UTF-8",
+        "tooltip-format": "<tt><small>{calendar}</small></tt>",
+        "calendar": {
+          "mode": "month",
+          "mode-mon-col": 3,
+          "weeks-pos": "right",
+          "on-scroll": 1,
+          "format": {
+            "months": "<span color='#ffead3'><b>{}</b></span>",
+            "days": "<span color='#ecc6d9'><b>{}</b></span>",
+            "weeks": "<span color='#99ffdd'><b>W{}</b></span>",
+            "weekdays": "<span color='#ffcc66'><b>{}</b></span>",
+            "today": "<span color='#ff6699'><b><u>{}</u></b></span>"
+          }
+        },
+        "actions": {
+          "on-click": "shift_up",
+          "on-click-right": "shift_down",
+          "on-click-middle": "mode"
+        }
     },
     // Sound
     "pulseaudio": {
@@ -130,5 +134,32 @@
         "tooltip-format": "Launcher",
         "escape": true,
         "on-click": "walker --modules applications"
-    }
+    },
+    "custom/notification": {
+        "tooltip": false,
+        "format": "{icon}",
+        "format-icons": {
+          "notification": "<span foreground='red'><sup></sup></span>",
+          "none": "",
+          "dnd-notification": "<span foreground='red'><sup></sup></span>",
+          "dnd-none": "",
+          "inhibited-notification": "<span foreground='red'><sup></sup></span>",
+          "inhibited-none": "",
+          "dnd-inhibited-notification": "<span foreground='red'><sup></sup></span>",
+          "dnd-inhibited-none": ""
+        },
+        "return-type": "json",
+        "exec-if": "which swaync-client",
+        "exec": "swaync-client -swb",
+        "on-click": "swaync-client -t -sw",
+        "on-click-right": "swaync-client -d -sw",
+        "escape": true
+      },
+      "custom/weather": {
+        "format": "{alt}   {}",
+        "interval": 600,
+        "return-type": "json",
+        "exec": "~/.config/waybar/custom/weather.sh Munich",
+        "exec-if": "ping wttr.in -c1"
+    },
 }
