@@ -6,22 +6,26 @@
 	"margin-top": 0,
     "spacing": 0,
     "modules-left": [
-        "custom/launcher",
-        "hyprland/window"
+      "hyprland/workspaces",
+      "hyprland/window"
     ],
     "modules-center": [
-        "hyprland/workspaces"
+      "clock",
+      "custom/notification"
     ],
     "modules-right": [
+        "tray",
         "custom/updates",
+        "custom/weather",
         "network",
         "pulseaudio",
-        "battery",
-        "custom/weather",
-        "clock",
-        "custom/notification"
+        "battery"
         // "custom/power"
     ],
+    "tray": {
+      "icon-size": 21,
+      "spacing": 10
+    },
     // Hyprland Workspaces
     "hyprland/workspaces": {
         "on-scroll-up": "hyprctl dispatch workspace r-1",
@@ -56,7 +60,7 @@
         "critical": 15
         },
         "format": "{icon}  {capacity}%",
-        "format-charging": "  {capacity}%",
+        "format-charging": "  {capacity}%",
         "format-plugged": "  {capacity}%",
         "format-alt": "{icon}  {time}",
         // "format-good": "", // An empty format will hide the module
@@ -111,7 +115,7 @@
     // Network
     "network": {
         "format": "{ifname}  ⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}",
-        "format-wifi": "   {signalStrength}%   ⇣{bandwidthDownBytes}   ⇡{bandwidthUpBytes}",
+        "format-wifi": "   ⇣{bandwidthDownBytes}   ⇡{bandwidthUpBytes}",
         "format-ethernet": "  {ifname}  ⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}",
         "format-disconnected": "Disconnected",
         "tooltip-format": "   {ifname} via {gwaddri}",
@@ -122,10 +126,11 @@
     },
     // Updates Count
     "custom/updates": {
-        "format": "   {}",
+        "format": "{alt}   {}",
         "escape": true,
         "return-type": "json",
-        "exec": "~/.config/waybar/custom/updates.sh",
+        "exec": "ch package-updates",
+        "on-click": "kitty zsh -c 'sudo pacman -Suy'",
         "restart-interval": 300
     },
     // Launcher
@@ -159,7 +164,7 @@
         "format": "{alt}   {}",
         "interval": 600,
         "return-type": "json",
-        "exec": "~/.config/waybar/custom/weather.sh Munich",
-        "exec-if": "ping wttr.in -c1"
-    },
+        "exec": "ch weather --cache-path /home/gerrit/.cache/weather-cache.json --location Munich,DE --api-token-path /home/gerrit/.open-weather-api-token",
+        "on-click": "ch weather --cache-path /home/gerrit/.cache/weather-cache.json --location Munich,DE --api-token-path /home/gerrit/.open-weather-api-token"
+    }
 }

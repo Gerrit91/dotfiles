@@ -2,7 +2,7 @@
 	border: none;
 	border-radius: 0px;
 	font-family: "Font Awesome";
-    font-size: 13px;
+    font-size: 15px;
     padding: 0;
     margin: 0;
     min-height: 0;
@@ -47,9 +47,9 @@ window#waybar.empty #window {
 
 #workspaces {
     background: @workspacesbackground1;
-    margin: 0px;
+    margin-left: 10px;
     padding: 0px;
-    border-radius: 10px;
+    border-radius: 5px;
     border: 0px;
     opacity: 0.8;
     color: @textcolor1;
@@ -61,11 +61,13 @@ window#waybar.empty #window {
 }
 
 #workspaces button {
-    padding: 0px 15px;
-    margin: 18px 4px;
+    min-width: 5px;
+    min-height: 5px;
+    padding: 0px 0px;
+    margin: 10px 2px;
     background-color: @workspacesbackground2;
     transition: all 0.3s ease-in-out;
-    border-radius: 10px;
+    border-radius: 5px;
     border: 0px;
     opacity: 0.4;
     color: @textcolor1;
@@ -74,7 +76,7 @@ window#waybar.empty #window {
 #workspaces button.active {
     color: @textcolor1;
     background: @workspacesbackground2;
-    min-width: 40px;
+    min-width: 30px;
     transition: all 0.3s ease-in-out;
     opacity: 1.0;
 }
@@ -210,6 +212,8 @@ window#waybar.empty #window {
 }
 
 #custom-notification {
+    background-color: @backgroundlight;
+    color: @textcolor2;
     padding: 0px 0px 0px 0px;
     margin: 0px 20px 0px 10px;
     opacity:0.8;
