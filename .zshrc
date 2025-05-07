@@ -168,7 +168,7 @@ alias m='metalctl'
 alias c='cloudctl'
 alias ansible-common-venv='. /home/gerrit/git/github.com/metal-stack/ansible-common/venv/bin/activate'
 alias dotfiles='/usr/bin/git --git-dir="$HOME/git/github.com/Gerrit91/dotfiles/" --work-tree="$HOME"'
-alias ssh="kitten ssh"
+#alias ssh="kitten ssh"
 alias mc=mcli
 
 # source <(stern --completion=zsh)
@@ -191,8 +191,12 @@ export CLOUDSDK_PYTHON_ARGS='-S -W ignore'
 export PATH=$CLOUDSDK_ROOT_DIR/bin:$PATH
 export GOOGLE_CLOUD_SDK_HOME=$CLOUDSDK_ROOT_D
 
+export DOCKER_BUILDKIT=1
+export BUILDKIT_PROGRESS=plain
+
 export CLOUDCTL_FORCE_COLOR=true
 export METALCTL_FORCE_COLOR=true
+export COMMONDIR=/home/gerrit/git/github.com/metal-stack/builder
 
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 export EDITOR=vim

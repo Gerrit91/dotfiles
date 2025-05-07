@@ -1,9 +1,9 @@
 // -*- mode: jsonc -*-
 {
     "layer": "top",
-    // "output": "!eDP-1",
+    "output": "eDP-1",
     "margin-bottom": 0,
-	"margin-top": 0,
+	  "margin-top": 0,
     "spacing": 0,
     "modules-left": [
       "hyprland/workspaces",
@@ -126,7 +126,7 @@
     },
     // Updates Count
     "custom/updates": {
-        "format": "{alt}   {}",
+        "format": "{1}   {0}",
         "escape": true,
         "return-type": "json",
         "exec": "ch package-updates",
@@ -161,7 +161,7 @@
         "escape": true
       },
       "custom/weather": {
-        "format": "{alt}   {}",
+        "format": "{1}   {0}",
         "interval": 600,
         "return-type": "json",
         "exec": "ch weather --cache-path /home/gerrit/.cache/weather-cache.json --location Munich,DE --api-token-path /home/gerrit/.open-weather-api-token",
