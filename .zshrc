@@ -165,6 +165,7 @@ alias vi=vim
 alias watch='watch -c '
 alias k='kubectl'
 alias m='metalctl'
+alias mv2='metalctlv2'
 alias c='cloudctl'
 alias ansible-common-venv='. /home/gerrit/git/github.com/metal-stack/ansible-common/venv/bin/activate'
 alias dotfiles='/usr/bin/git --git-dir="$HOME/git/github.com/Gerrit91/dotfiles/" --work-tree="$HOME"'
@@ -177,10 +178,12 @@ source /usr/share/nvm/init-nvm.sh
 
 echo -e '#compdef _cloudctl cloudctl\n. <(cloudctl completion zsh)' > ${fpath[1]}/_cloudctl
 echo -e '#compdef _metalctl metalctl\n. <(metalctl completion zsh)' > ${fpath[1]}/_metalctl
+echo -e '#compdef _metalctlv2 metalctlv2\n. <(metalctlv2 completion zsh)' > ${fpath[1]}/_metalctlv2
 echo -e '#compdef _metal metal\n. <(metal completion zsh)' > ${fpath[1]}/_metal
 
 complete -F __start_kubectl k
 complete -F __start_metalctl m
+complete -F __start_metalctlv2 mv2
 complete -F __start_cloudctl c
 complete -F _complete_alias dotfiles
 # complete -C /usr/local/bin/mc mc
