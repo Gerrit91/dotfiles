@@ -1,0 +1,30 @@
+[Unit]
+Description=Hyprland - A dynamic tiling Wayland compositor
+Documentation=man:hyprland(1)
+BindsTo=hyprland-session.target
+Before=hyprland-session.target graphical-session.target
+PropagatesStopTo=hyprland-session.target graphical-session.target
+After=graphical-session-pre.target
+OnSuccess=hyprland-session-shutdown.target
+OnSuccessJobMode=replace-irreversibly
+OnFailure=hyprland-session-shutdown.target
+OnFailureJobMode=replace-irreversibly
+Conflicts=hyprland-session-shutdown.target
+Before=hyprland-session-shutdown.target
+CollectMode=inactive-or-failed
+
+[Service]
+Type=notify
+NotifyAccess=all
+ExecStart=/usr/bin/Hyprland
+Restart=no
+TimeoutStartSec=60
+TimeoutStopSec=30
+SyslogIdentifier=hyprland
+Slice=session.slice
+
+# Hyprland with USES_SYSTEMD handles:
+# - systemd-notify when ready
+# - systemd environment import/export 
+# - dbus-update-activation-environment
+# - environment cleanup on exit 
