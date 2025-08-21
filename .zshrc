@@ -15,7 +15,8 @@ export ZSH="$HOME/.oh-my-zsh"
 # load a random theme each time Oh My Zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="powerlevel10k/powerlevel10k"
+# ZSH_THEME="powerlevel10k/powerlevel10k"
+source "/usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -168,13 +169,12 @@ alias m='metalctl'
 alias mv2='metalctlv2'
 alias c='cloudctl'
 alias ansible-common-venv='. /home/gerrit/git/github.com/metal-stack/ansible-common/venv/bin/activate'
-alias dotfiles='/usr/bin/git --git-dir="$HOME/git/github.com/Gerrit91/dotfiles/" --work-tree="$HOME"'
-#alias ssh="kitten ssh"
+alias dotfiles='/usr/bin/git --git-dir="$HOME/.config/" --work-tree="$HOME"'
 alias mc=mcli
 
-# source <(stern --completion=zsh)
+source <(stern --completion=zsh)
 source <(kubectl completion zsh)
-source /usr/share/nvm/init-nvm.sh
+#source /usr/share/nvm/init-nvm.sh
 
 echo -e '#compdef _cloudctl cloudctl\n. <(cloudctl completion zsh)' > ${fpath[1]}/_cloudctl
 echo -e '#compdef _metalctl metalctl\n. <(metalctl completion zsh)' > ${fpath[1]}/_metalctl
@@ -186,7 +186,7 @@ complete -F __start_metalctl m
 complete -F __start_metalctlv2 mv2
 complete -F __start_cloudctl c
 complete -F _complete_alias dotfiles
-# complete -C /usr/local/bin/mc mc
+complete -C /usr/local/bin/mc mc
 
 export CLOUDSDK_ROOT_DIR=/opt/google-cloud-cli
 export CLOUDSDK_PYTHON=/usr/bin/python
