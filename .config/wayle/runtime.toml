@@ -1,0 +1,78 @@
+[bar]
+scale = 0.8500000238418579
+padding-ends = 1.5
+bg = "transparent"
+border-color = "bg-surface"
+rounding = "md"
+button-variant = "basic"
+button-bg-opacity = 47
+button-label-size = 1.2999999523162842
+button-label-padding = 1.2000000476837158
+button-gap = 1.5
+
+[[bar.layout]]
+monitor = "*"
+show = true
+left = [
+    "hyprland-workspaces",
+    "updates",
+]
+center = [
+    "weather",
+    "clock",
+    "notifications",
+    "idle-inhibit",
+    "hyprsunset",
+]
+right = [
+    "netstat",
+    "network",
+    "bluetooth",
+    "volume",
+    "battery",
+    "dashboard",
+]
+
+[modules.bluetooth]
+connected-icon = "tb-bluetooth-connected-symbolic"
+searching-icon = "tb-bluetooth-symbolic"
+label-show = false
+
+[modules.clock]
+format = "%a %b %d %T"
+border-color = "status-info"
+icon-color = "status-info"
+icon-bg-color = "status-info"
+label-color = "status-info"
+dropdown-show-seconds = true
+
+[modules.dashboard]
+icon-override = "tb-settings-symbolic"
+
+[modules.hyprland-workspaces]
+display-mode = "none"
+app-icons-show = true
+
+[modules.hyprsunset]
+format = "{{ status }} "
+label-show = false
+
+[modules.netstat]
+border-color = "status-success"
+icon-show = false
+icon-color = "status-success"
+icon-bg-color = "status-success"
+label-color = "status-success"
+
+[modules.notifications]
+label-show = false
+popup-position = "top-center"
+
+[modules.weather]
+provider = "weather-api"
+location = "Munich, Germany"
+time-format = "24h"
+refresh-interval-seconds = 1200
+
+[wallpaper]
+engine-enabled = false
