@@ -111,16 +111,18 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+HISTSIZE=1000000
+
 function prompt_metalctl() {
-  local ctx=$(metalctl context short)
-  local u=$(metalctl context |grep "*"|cut -d" " -f5)
-  p10k segment -f blue -t "${ctx} (${u// /})"
+  local ctx=$(metalctl ctx short)
+  local u=$(metalctl ctx -o template --template '{{ (index .Contexts .CurrentContext).ApiURL }}')
+  p10k segment -i '🤘' -f blue -t "${ctx} (${u// /})"
 }
 
 function prompt_cloudctl() {
-  local ctx=$(cloudctl context short)
-  local u=$(cloudctl context |grep "*"|cut -f2)
-  p10k segment -f blue -t "${ctx} (${u// /})"
+  local ctx=$(cloudctl ctx short)
+  local u=$(cloudctl ctx -o template --template '{{ (index .Contexts .CurrentContext).ApiURL }}')
+  p10k segment -i '⛅' -f blue -t "${ctx} (${u// /})"
 }
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
@@ -201,5 +203,8 @@ export CLOUDCTL_FORCE_COLOR=true
 export METALCTL_FORCE_COLOR=true
 export COMMONDIR=/home/gerrit/git/github.com/metal-stack/builder
 
-export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+export PATH="$HOME/go/bin:${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 export EDITOR=vim
+
+# opencode
+export PATH=/home/gerrit/.opencode/bin:$PATH
