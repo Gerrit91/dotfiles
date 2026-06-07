@@ -16,7 +16,7 @@ CollectMode=inactive-or-failed
 [Service]
 Type=notify
 NotifyAccess=all
-ExecStart=/usr/bin/Hyprland
+ExecStart=/usr/bin/start-hyprland
 Restart=no
 TimeoutStartSec=60
 TimeoutStopSec=30
@@ -25,6 +25,6 @@ Slice=session.slice
 
 # Hyprland with USES_SYSTEMD handles:
 # - systemd-notify when ready
-# - systemd environment import/export 
+# - systemd environment import/export
 # - dbus-update-activation-environment
-# - environment cleanup on exit 
+# - environment cleanup on exit
