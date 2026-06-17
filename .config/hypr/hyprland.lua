@@ -44,7 +44,7 @@ if monitors_amount < 2 then
     workspace_count = 8
 elseif monitors_amount == 2 then
     hl.notification.create({ text = "using configuration for 2 monitors", timeout = 5000 })
-    workspace_count = 5
+    workspace_count = 6
 else
     hl.notification.create({ text = "using configuration for 3+ monitors", timeout = 5000 })
     workspace_count = 4
@@ -68,12 +68,12 @@ local browser     = "firefox"
 -- Autostart necessary processes (like notifications daemons, status bars, etc.)
 -- Or execute your favorite apps at launch like this:
 --
+
+-- most of it is started with systemd services, so not much work needed here
 hl.on("hyprland.start", function ()
 -- hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
     hl.exec_cmd("gsettings set org.gnome.desktop.interface gtk-theme \"adw-gtk3\"")
     hl.exec_cmd("gsettings set org.gnome.desktop.interface color-scheme \"prefer-dark\"")
--- hl.exec_cmd("hyprpm reload")
--- hl.exec_cmd("vicinae server") (started through systemctl --user enabled vicinae)
 end)
 
 -------------------------------
@@ -83,9 +83,10 @@ end)
 -- See https://wiki.hypr.land/Configuring/Advanced-and-Cool/Environment-variables/
 
 -- as started through systemd, these are located at ~/.config/hyprland/env:
--- XCURSOR_SIZE,24
--- HYPRCURSOR_SIZE,24
--- QT_QPA_PLATFORMTHEME,qt6ct
+-- hl.env("XCURSOR_SIZE", "24")
+-- hl.env("HYPRCURSOR_SIZE", "24")
+-- hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")
+
 -- I don't see any positive effect with these ones:
 -- GDK_BACKEND,wayland,x11,*
 -- GDK_SCALE,1
@@ -99,9 +100,6 @@ end)
 -- QT_AUTO_SCREEN_SCALE_FACTOR,0
 -- QT_SCALE_FACTOR,1
 -- QT_QPA_PLATFORM,wayland;xcb
-
--- hl.env("XCURSOR_SIZE", "24")
--- hl.env("HYPRCURSOR_SIZE", "24")
 
 -----------------------
 ----- PERMISSIONS -----
@@ -117,8 +115,6 @@ hl.config({
   },
 })
 
--- hl.permission("/usr/(bin|local/bin)/grim", "screencopy", "allow")
--- hl.permission("/usr/(lib|libexec|lib64)/xdg-desktop-portal-hyprland", "screencopy", "allow")
 hl.permission({ binary = "/usr/(bin|local/bin)/hyprpm", type = "plugin", mode = "allow" })
 hl.permission({ binary = "/usr/(bin|local/bin)/hyprlock", type = "screencopy", mode = "allow" })
 hl.permission({ binary = "/usr/(bin|local/bin)/hyprshot", type = "screencopy", mode = "allow" })
@@ -205,24 +201,6 @@ hl.animation({ leaf = "workspaces",    enabled = true,  speed = 1.94, bezier = "
 hl.animation({ leaf = "workspacesIn",  enabled = true,  speed = 1.21, bezier = "almostLinear", style = "fade" })
 hl.animation({ leaf = "workspacesOut", enabled = true,  speed = 1.94, bezier = "almostLinear", style = "fade" })
 hl.animation({ leaf = "zoomFactor",    enabled = true,  speed = 7,    bezier = "quick" })
-
--- Ref https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/
--- "Smart gaps" / "No gaps when only"
--- uncomment all if you wish to use that.
--- hl.workspace_rule({ workspace = "w[tv1]", gaps_out = 0, gaps_in = 0 })
--- hl.workspace_rule({ workspace = "f[1]",   gaps_out = 0, gaps_in = 0 })
--- hl.window_rule({
---     name  = "no-gaps-wtv1",
---     match = { float = false, workspace = "w[tv1]" },
---     border_size = 0,
---     rounding    = 0,
--- })
--- hl.window_rule({
---     name  = "no-gaps-f1",
---     match = { float = false, workspace = "f[1]" },
---     border_size = 0,
---     rounding    = 0,
--- })
 
 -- See https://wiki.hypr.land/Configuring/Layouts/Dwindle-Layout/ for more
 hl.config({
@@ -408,7 +386,6 @@ hl.bind("ALT + Tab", function()
     hl.dispatch(hl.dsp.window.bring_to_top())
     hl.dispatch(hl.dsp.window.fullscreen({ mode = "fullscreen" }))
 end)
-
 hl.bind(mainMod .. " + Tab", function()
     hl.dispatch(hl.dsp.window.cycle_next({ next = false }))
     hl.dispatch(hl.dsp.window.bring_to_top())
@@ -449,6 +426,7 @@ hl.window_rule({
 })
 
 -- Smart Gaps
+
 hl.workspace_rule({ workspace = "w[tv1]", gaps_out = 0, gaps_in = 0 })
 hl.workspace_rule({ workspace = "f[1]", gaps_out = 0, gaps_in = 0 })
 hl.window_rule({ match = { float = false, workspace = "w[tv1]" }, border_size = 0 })
@@ -464,18 +442,27 @@ if monitors_amount < 2 then
     hl.window_rule({ workspace = "3",         match = { class = terminal }})
     hl.window_rule({ workspace = "4 silent",  match = { class = "gitkraken" }})
     hl.window_rule({ workspace = "5",         match = { class = "slack" }})
+    hl.window_rule({ workspace = "6",         match = { class = "chromium" }})
+
+    -- hl.workspace_rule({ workspace = "2", layout = "monocle" })
 elseif monitors_amount == 2 then
     hl.window_rule({ workspace = "1",         match = { class = "slack" }})
-    hl.window_rule({ workspace = "5",         match = { class = browser }})
-    hl.window_rule({ workspace = "6",         match = { class = "code" }})
-    hl.window_rule({ workspace = "7",         match = { class = terminal }})
-    hl.window_rule({ workspace = "8 silent",  match = { class = "gitkraken" }})
+    hl.window_rule({ workspace = "2",         match = { class = "chromium" }})
+    hl.window_rule({ workspace = "7",         match = { class = browser }})
+    hl.window_rule({ workspace = "8",         match = { class = "code" }})
+    hl.window_rule({ workspace = "9",         match = { class = terminal }})
+    hl.window_rule({ workspace = "10 silent", match = { class = "gitkraken" }})
+
+    -- hl.workspace_rule({ workspace = "7", layout = "monocle" })
 else
     hl.window_rule({ workspace = "1",         match = { class = "slack" }})
     hl.window_rule({ workspace = "5",         match = { class = browser }})
     hl.window_rule({ workspace = "6",         match = { class = "code" }})
     hl.window_rule({ workspace = "9",         match = { class = terminal }})
     hl.window_rule({ workspace = "10 silent", match = { class = "gitkraken" }})
+    hl.window_rule({ workspace = "11",        match = { class = "chromium" }})
+
+    -- hl.workspace_rule({ workspace = "6", layout = "monocle" })
 end
 
 -- Blur deactivation
