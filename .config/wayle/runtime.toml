@@ -48,8 +48,8 @@ dropdown-show-seconds = true
 
 [modules.dashboard]
 icon-override = "tb-settings-symbolic"
-dropdown-reboot-command = "hyprshutdown -t 'Restarting...' --post-cmd 'systemctl reboot'"
-dropdown-poweroff-command = "hyprshutdown -t 'Shutting down...' --post-cmd 'systemctl poweroff'"
+dropdown-reboot-command = """hyprctl dispatch 'hl.dsp.exec_cmd("hyprshutdown -t Restarting --post-cmd reboot")'"""
+dropdown-poweroff-command = '''hyprctl dispatch 'hl.dsp.exec_cmd("hyprshutdown -t Restarting --post-cmd \"systemctl poweroff\"")''''
 
 [modules.hyprland-workspaces]
 display-mode = "none"
