@@ -32,24 +32,6 @@ hl.monitor({
     scale    = "1.5",
 })
 
-------------------------
----- DYNAMIC CONFIG ----
-------------------------
-
-local monitors_amount = #hl.get_monitors();
-local workspace_count
-
-if monitors_amount < 2 then
-    hl.notification.create({ text = "using configuration for 1 monitor", timeout = 5000 })
-    workspace_count = 8
-elseif monitors_amount == 2 then
-    hl.notification.create({ text = "using configuration for 2 monitors", timeout = 5000 })
-    workspace_count = 6
-else
-    hl.notification.create({ text = "using configuration for 3+ monitors", timeout = 5000 })
-    workspace_count = 4
-end
-
 ---------------------
 ---- MY PROGRAMS ----
 ---------------------
@@ -71,7 +53,7 @@ local browser     = "firefox"
 
 -- most of it is started with systemd services, so not much work needed here
 hl.on("hyprland.start", function ()
--- hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
+    hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
     hl.exec_cmd("gsettings set org.gnome.desktop.interface gtk-theme \"adw-gtk3\"")
     hl.exec_cmd("gsettings set org.gnome.desktop.interface color-scheme \"prefer-dark\"")
 end)
@@ -252,18 +234,6 @@ hl.config({
     },
 })
 
------------------
----- PLUGINS ----
------------------
-
-package.path = package.path .. ";./?.lua;./?/init.lua"
-local smw = require("plugins.split-monitor-workspaces")
-
-smw.setup({
-    workspace_count = workspace_count,
-    enable_wrapping = false,
-})
-
 ---------------
 ---- INPUT ----
 ---------------
@@ -327,22 +297,6 @@ hl.bind(mainMod .. " + left",  hl.dsp.focus({ direction = "left" }))
 hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "right" }))
 hl.bind(mainMod .. " + up",    hl.dsp.focus({ direction = "up" }))
 hl.bind(mainMod .. " + down",  hl.dsp.focus({ direction = "down" }))
-
--- switch-monitoring-workspaces
-
-for i = 1, smw.get_amount_of_workspaces() do
-    local n = tostring(i)
-    -- Switch to the Nth workspace on the currently focused monitor.
-    hl.bind(mainMod .. " +" .. n, smw.workspace(n))
-    -- Move the active window to the Nth workspace on the currently focused monitor silently (no focus change).
-    hl.bind(mainMod .. " + SHIFT +" .. n, smw.move_to_workspace_silent(n))
-end
-
-hl.bind(mainMod .. " + mouse_down", smw.cycle_workspaces("next"))
-hl.bind(mainMod .. " + mouse_up", smw.cycle_workspaces("prev"))
-hl.bind("CTRL + SHIFT + RIGHT", smw.workspace("+1"))   -- Next workspace (relative).
-hl.bind("CTRL + SHIFT + LEFT", smw.workspace("-1")) -- Previous workspace (relative).
-hl.bind(mainMod .. " + SHIFT + G", smw.grab_rogue_windows())
 
 -- Workspace and window management
 hl.bind(mainMod .. " + SHIFT + left",  hl.dsp.window.move({ workspace = "e-1" }))
@@ -435,37 +389,6 @@ hl.window_rule({ match = { float = false, workspace = "w[tv1]" }, rounding = 0 }
 hl.window_rule({ match = { float = false, workspace = "f[1]" }, border_size = 1 })
 hl.window_rule({ match = { float = false, workspace = "f[1]" }, rounding = 0 })
 
--- Window placement
-
-if monitors_amount < 2 then
-    hl.window_rule({ workspace = "1",         match = { class = browser }})
-    hl.window_rule({ workspace = "2",         match = { class = "code" }})
-    hl.window_rule({ workspace = "3",         match = { class = terminal }})
-    hl.window_rule({ workspace = "4 silent",  match = { class = "gitkraken" }})
-    hl.window_rule({ workspace = "5",         match = { class = "slack" }})
-    hl.window_rule({ workspace = "6",         match = { class = "chromium" }})
-
-    -- hl.workspace_rule({ workspace = "2", layout = "monocle" })
-elseif monitors_amount == 2 then
-    hl.window_rule({ workspace = "1",         match = { class = "slack" }})
-    hl.window_rule({ workspace = "2",         match = { class = "chromium" }})
-    hl.window_rule({ workspace = "7",         match = { class = browser }})
-    hl.window_rule({ workspace = "8",         match = { class = "code" }})
-    hl.window_rule({ workspace = "9",         match = { class = terminal }})
-    hl.window_rule({ workspace = "10 silent", match = { class = "gitkraken" }})
-
-    -- hl.workspace_rule({ workspace = "7", layout = "monocle" })
-else
-    hl.window_rule({ workspace = "1",         match = { class = "slack" }})
-    hl.window_rule({ workspace = "5",         match = { class = browser }})
-    hl.window_rule({ workspace = "6",         match = { class = "code" }})
-    hl.window_rule({ workspace = "9",         match = { class = terminal }})
-    hl.window_rule({ workspace = "10 silent", match = { class = "gitkraken" }})
-    hl.window_rule({ workspace = "11",        match = { class = "chromium" }})
-
-    -- hl.workspace_rule({ workspace = "6", layout = "monocle" })
-end
-
 -- Blur deactivation
 hl.window_rule({ match = { class = browser }, no_blur = true })
 hl.window_rule({ match = { class = "gitkraken" }, no_blur = true })
@@ -491,14 +414,108 @@ hl.window_rule({ match = { class = "org.gnome.Calculator" }, float = true })
 hl.window_rule({ match = { class = "org.gnome.Nautilus" }, float = true })
 hl.window_rule({ match = { class = "org.keepassxc.KeePassXC" }, float = true })
 
-----------------
----- EVENTS ----
-----------------
+-------------
+---- SMW ----
+-------------
 
-hl.on("monitor.added", function(w)
-    hl.dsp.exec_cmd("hyprctl reload")
+local monitors_amount = #hl.get_monitors();
+local workspace_count
+
+if monitors_amount < 2 then
+    workspace_count = 8
+elseif monitors_amount == 2 then
+    workspace_count = 6
+else
+    workspace_count = 4
+end
+
+
+package.path = package.path .. ";./?.lua;./?/init.lua"
+local smw = require("plugins.split-monitor-workspaces")
+
+smw.setup({
+    workspace_count = workspace_count,
+    enable_wrapping = false,
+})
+
+
+for i = 1, smw.get_amount_of_workspaces() do
+    local n = tostring(i)
+    -- Switch to the Nth workspace on the currently focused monitor.
+    hl.bind(mainMod .. " +" .. n, smw.workspace(n))
+    -- Move the active window to the Nth workspace on the currently focused monitor silently (no focus change).
+    hl.bind(mainMod .. " + SHIFT +" .. n, smw.move_to_workspace_silent(n))
+end
+
+hl.bind(mainMod .. " + mouse_down", smw.cycle_workspaces("next"))
+hl.bind(mainMod .. " + mouse_up", smw.cycle_workspaces("prev"))
+hl.bind("CTRL + SHIFT + RIGHT", smw.workspace("+1"))   -- Next workspace (relative).
+hl.bind("CTRL + SHIFT + LEFT", smw.workspace("-1")) -- Previous workspace (relative).
+hl.bind(mainMod .. " + SHIFT + G", smw.grab_rogue_windows())
+
+
+local window_workspace_map = {
+    [1] = {
+        ["firefox"]    = { target = "1" },
+        ["code"]       = { target = "2" },
+        ["kitty"]      = { target = "3" },
+        ["gitkraken"]  = { target = "4", silent = true },
+        ["slack"]      = { target = "5" },
+        ["chromium"]   = { target = "6" },
+    },
+    [2] = {
+        ["slack"]     = { target = "1" },
+        ["chromium"]  = { target = "2" },
+        ["firefox"]   = { target = "7" },
+        ["code"]      = { target = "8" },
+        ["kitty"]     = { target = "9" },
+        ["gitkraken"] = { target = "10", silent = true },
+    },
+    [3] = {
+        ["slack"]     = { target = "1" },
+        ["firefox"]   = { target = "5" },
+        ["code"]      = { target = "6" },
+        ["kitty"]     = { target = "9" },
+        ["gitkraken"] = { target = "10", silent = true },
+        ["chromium"]  = { target = "11" },
+    },
+}
+
+local function apply_rules_and_remap()
+    local n = #hl.get_monitors()
+
+    if n > 3 then n = 3 elseif n < 1 then n = 1 end
+    local ws_map = window_workspace_map[n]
+    if not ws_map then
+        return
+    end
+
+    for class, entry in pairs(ws_map) do
+        local ws_str = entry.target
+        if entry.silent then ws_str = ws_str .. " silent" end
+        hl.window_rule({ workspace = ws_str, match = { class = class } })
+    end
+
+    local moved_count = 0
+    for _, win in ipairs(hl.get_windows()) do
+        if not win.mapped or win.special or not win.class or not win.workspace then
+            goto continue
+        end
+        local entry = ws_map[win.class]
+        if not entry then goto continue end
+        if win.workspace.name ~= entry.target then
+            hl.dispatch(hl.dsp.window.move({ workspace = entry.target, window = win, follow = false }))
+            moved_count = moved_count + 1
+        end
+        ::continue::
+    end
+end
+
+apply_rules_and_remap()
+
+hl.on("monitor.added", function()
+    apply_rules_and_remap()
 end)
-
-hl.on("monitor.removed", function(w)
-    hl.dsp.exec_cmd("hyprctl reload")
+hl.on("monitor.removed", function()
+    apply_rules_and_remap()
 end)
