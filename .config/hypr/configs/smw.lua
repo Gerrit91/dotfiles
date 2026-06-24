@@ -102,13 +102,15 @@ end
 
 apply_rules_and_remap()
 
--- for callbacks it could be more reliable to async the update
--- hl.exec_cmd("bash -c 'sleep 0.4 && hyprctl reload'")
 
 hl.on("monitor.added", function()
-    apply_rules_and_remap()
+    -- for callbacks it could be more reliable to async the update
+    hl.exec_cmd("bash -c 'sleep 0.4 && hyprctl reload'")
+    -- apply_rules_and_remap()
 end)
 hl.on("monitor.removed", function()
-    apply_rules_and_remap()
+     -- for callbacks it could be more reliable to async the update
+    hl.exec_cmd("bash -c 'sleep 0.4 && hyprctl reload'")
+    -- apply_rules_and_remap()
 end)
 -- hl.dsp.window.
